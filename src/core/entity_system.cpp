@@ -7,3 +7,25 @@
 //
 
 #include "entity_system.h"
+#include "context.h"
+
+namespace cell{
+    
+    class EntitySystemImpl {
+    
+    public:
+        EntitySystemImpl(){}
+    };
+}
+
+using namespace cell;
+
+EntitySystem::EntitySystem(const Context &ctx):pImpl(new EntitySystemImpl())
+{
+    
+}
+
+EntitySystem::~EntitySystem()
+{
+    
+}
