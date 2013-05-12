@@ -1,0 +1,3 @@
+SET(CELL_SRC main.cpp)
+
+ADD_EXECUTABLE(CellCore, CELL_SRC)
