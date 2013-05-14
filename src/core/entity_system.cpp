@@ -5,7 +5,7 @@
 //  Created by he qianjun on 13-5-12.
 //
 //
-
+#include "entity.h"
 #include "entity_system.h"
 #include "context.h"
 
