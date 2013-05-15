@@ -8,16 +8,18 @@
 #include <chrono>
 #include "entity.h"
 #include "type_identifier.h"
+#include "linear_mem_pool.h"
 
-struct Class2 : public identifier<Class2> {
+
+struct Class2 : public identifier<Class2, 1> {
     
 };
 
-struct Class1 : public identifier<Class1> {
+struct Class1 : public identifier<Class1, 2> {
     
 };
 
-struct Class3 : public identifier<Class3> {
+struct Class3 : public identifier<Class3, 3> {
     
 };
 
@@ -29,6 +31,7 @@ class MyComponent : public cell::ComponentBase<MyComponent> {
 public:
 };
 
+typedef LinearPool<int> int_pool;
 using namespace cell;
 int main()
 {
@@ -54,9 +57,14 @@ int main()
     
     int handle = compMgr.addComponent<MyComponent>(1);
     
+    int_pool pool;
+    
+    Handle h = pool.allocate();
+    int * p = pool.resolve(h);
+    std::cout<<(int)invalid_handle<<std::endl;
     prealloc_object<entity_t>::TypeArray  &array = entity_t::__allocated;
-    std::cout<<Class2::id.id<<std::endl;
-    std::cout<<Class1::id.id<<std::endl;
-    std::cout<<Class3::id.id<<std::endl;
+    std::cout<<Class2::id<<std::endl;
+    std::cout<<Class1::id<<std::endl;
+    std::cout<<Class3::id<<std::endl;
 	return 0;
 }

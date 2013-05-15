@@ -9,26 +9,16 @@
 #ifndef TrinityCell_type_identifier_h
 #define TrinityCell_type_identifier_h
 
-struct type_id
-{
-    type_id(const type_id&) = delete;
-    const type_id& operator=(const type_id &) = delete;
-    int id;
-};
-
-template <typename Type>
+typedef int16_t type_id;
+template <typename Type, int16_t ID>
 struct identifier {
     static type_id id;
 };
 
-template <>
-struct identifier<void>{
-    static type_id id;
-};
+template<>
+type_id identifier<void, 0>::id = 0;
 
-type_id identifier<void>::id = {0};
-
-template <typename Type>
-type_id identifier<Type>::id = {identifier<void>::id.id++};
+template <typename Type, int16_t ID>
+type_id identifier<Type, ID>::id = ID ;
 
 #endif
