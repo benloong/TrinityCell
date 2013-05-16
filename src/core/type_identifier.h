@@ -12,13 +12,13 @@
 typedef int16_t type_id;
 template <typename Type, int16_t ID>
 struct identifier {
-    static type_id id;
+    static const type_id id;
 };
 
 template<>
-type_id identifier<void, 0>::id = 0;
+const type_id identifier<void, 0>::id = 0;
 
 template <typename Type, int16_t ID>
-type_id identifier<Type, ID>::id = ID ;
+const type_id identifier<Type, ID>::id = ID ;
 
 #endif

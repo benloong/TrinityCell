@@ -12,6 +12,7 @@
 using namespace cell;
 
 namespace cell {
+    
     class RenderSystemImpl
     {
         

@@ -8,31 +8,15 @@
 #include <chrono>
 #include "entity.h"
 #include "type_identifier.h"
-#include "linear_mem_pool.h"
+#include "fixed_size_pool.h"
+#include "hierarchy.h"
 
 
-struct Class2 : public identifier<Class2, 1> {
-    
-};
-
-struct Class1 : public identifier<Class1, 2> {
-    
-};
-
-struct Class3 : public identifier<Class3, 3> {
-    
-};
-
-class MyComponent : public cell::ComponentBase<MyComponent> {
-    int x;
-    int y;
-    int z;
-    
-public:
-};
-
-typedef LinearPool<int> int_pool;
+typedef FixedSizePool<int> int_pool;
+typedef ComponentManagerBaseT<int, 10> IntMgr ;
 using namespace cell;
+
+
 int main()
 {
 //    if(ctx == nullptr)
@@ -52,19 +36,38 @@ int main()
 //    }
 //    }
 //    std::cout<<"hello world\n";
-    ComponentManager compMgr;
-    compMgr.registerComponent<MyComponent>(5);
+    IntMgr int_mgr;
     
-    int handle = compMgr.addComponent<MyComponent>(1);
+    Handle h1 = int_mgr.create();
     
-    int_pool pool;
+    int * p = int_mgr.get(h1);
+    *p = 1000;
+    h1 = int_mgr.create();
+    p = int_mgr.get(h1);
     
-    Handle h = pool.allocate();
-    int * p = pool.resolve(h);
-    std::cout<<(int)invalid_handle<<std::endl;
-    prealloc_object<entity_t>::TypeArray  &array = entity_t::__allocated;
-    std::cout<<Class2::id<<std::endl;
-    std::cout<<Class1::id<<std::endl;
-    std::cout<<Class3::id<<std::endl;
-	return 0;
+    *p = 2000;
+    
+    Handle h2 = int_mgr.create();
+    p = int_mgr.get(h2);
+    *p = 3000;
+    int_mgr.destroy(h1);
+    h1 = int_mgr.create();
+//
+//    ComponentManager compMgr;
+//    compMgr.registerComponent<MyComponent>(5);
+//    
+//    int handle = compMgr.addComponent<MyComponent>(1);
+//    
+//    
+//    int_pool pool;
+//    
+//    Handle h = pool.allocate();
+//    int * p = pool.resolve(h);
+//    std::cout<<(int)invalid_handle<<std::endl;
+//    prealloc_object<entity_t>::TypeArray  &array = entity_t::__allocated;
+//    std::cout<<Class2::id<<std::endl;
+//    std::cout<<Class1::id<<std::endl;
+//    std::cout<<Class3::id<<std::endl;
+    
+    return 0;
 }

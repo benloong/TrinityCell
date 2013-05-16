@@ -1,5 +1,5 @@
 //
-//  linear_mem_pool.h
+//  fixed_size_pool.h
 //  TrinityCell
 //
 //  Created by he qianjun on 13-5-15.
@@ -9,7 +9,7 @@
 #ifndef TrinityCell_linear_mem_pool_h
 #define TrinityCell_linear_mem_pool_h
 #include <cstdint>
-
+#include <assert.h>
 struct Handle {
     uint32_t idx : 16;
     uint32_t key : 16;
@@ -33,7 +33,7 @@ struct Handle {
 const Handle invalid_handle = 0xffffffff;
 
 template <typename DataType, uint32_t POOL_SIZE = 1<<16 >
-struct LinearPool {
+struct FixedSizePool {
     
     struct Entry
     {
@@ -41,13 +41,27 @@ struct LinearPool {
         uint32_t    key       : 16;
     };
     
-    uint32_t        first_free;
+    uint32_t        first_free = 0;
     Entry           entries[POOL_SIZE];//for indices
-    DataType        pool[POOL_SIZE];  // raw array
+    DataType        pool[POOL_SIZE];   // raw array
+    
+    FixedSizePool() : first_free(0){
+        reset();
+    }
+    
+    void reset()
+    {
+        first_free = 0;
+        for(uint32_t i = 0; i < POOL_SIZE; i++)
+        {
+            entries[i].next_free = i+1;
+            entries[i].key = 0;
+        }
+    }
     
     Handle allocate()
     {
-        if (first_free >= POOL_SIZE) {
+        if (first_free >= POOL_SIZE || first_free >= 1<<16) {
             return invalid_handle;
         }
         uint32_t idx = first_free;

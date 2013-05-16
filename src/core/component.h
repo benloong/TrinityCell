@@ -19,13 +19,10 @@
 
 namespace cell {
     
-    enum COMPONENT_TYPE
-    {
-        
-    };
     
+    /*
     template<typename Type>
-    class InstancePool : public component_detail::instance_pool
+    class InstancePool
     {
         struct InstanceEntry
         {
@@ -162,7 +159,7 @@ namespace cell {
     
     template<typename Type>
     id_base<Type> ComponentBase<Type>::id;
-    
+    */
     namespace EntityUtils
     {
         template<typename Type>
@@ -192,7 +189,7 @@ namespace cell {
         void freeAll(uint32_t ent);
         
         template<typename Type>
-        Type* valid_cast(component_detail::component_base* comp);
+        Type* valid_cast(void* comp);
     }
     
     namespace SystemUtils
@@ -210,15 +207,16 @@ namespace cell {
         uint32_t getNumAllocated(uint32_t type_id);
         
         //returns an array of pointers to all allocated components of type, their count, and their size
-        component_detail::component_base** getComponents(uint32_t type_id, uint32_t* count);
+        void** getComponents(uint32_t type_id, uint32_t* count);
         
         //returns an array of all components of type(including unallocated instances!),
         //an array of the indices of allocated components within that array,
         //and the count of indices
-        component_detail::component_base* getComponentsIndexed(uint32_t type_id, uint16_t ** indices, uint32_t * count);
+        void* getComponentsIndexed(uint32_t type_id, uint16_t ** indices, uint32_t * count);
         
         void updateAllComponents(uint8_t stage);
     }
+     
 }
 
 #endif /* defined(__TrinityCell__component__) */
