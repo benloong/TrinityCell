@@ -18,7 +18,6 @@ SET(CELL_SRC
 	thread_pool.h
 	timer.cpp
 	timer.h
-	type_identifier.h
 )
 
 ADD_EXECUTABLE(CellCore ${CELL_SRC})

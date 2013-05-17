@@ -12,6 +12,6 @@
 namespace cell {
 
     template<>
-    const uint16_t ComponentBaseT<Transform>::type_id = 1;
+    const uint16_t ComponentBaseT<TransformHierarchy>::type_id = 1;
 
 }

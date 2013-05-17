@@ -21,9 +21,10 @@ namespace cell {
     };
     
     //one unique type_id per concrete component
-    template<typename Comp>
+    template<typename _AllocType>
     struct ComponentBaseT : public ComponentBase
     {
+        typedef _AllocType ManagerType;
         static const uint16_t type_id;
         ComponentBaseT() : ComponentBase(type_id) { }
     };

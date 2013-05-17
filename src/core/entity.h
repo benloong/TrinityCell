@@ -8,11 +8,10 @@
 
 #ifndef TrinityCell_entity_h
 #define TrinityCell_entity_h
-#include "prealloc_object.h"
 
-struct entity_t : prealloc_object<entity_t>
-{
-    int id;
-};
+typedef unsigned int entity_id_t;
 
+namespace Entity {
+    
+}
 #endif
