@@ -11,7 +11,7 @@
 
 #include "fixed_size_pool.h"
 
-//on roster per concrete component
+//on manager per concrete component type
 struct ComponentManagerBase
 {
     virtual ~ComponentManagerBase() {}
@@ -22,7 +22,9 @@ struct ComponentManagerBaseT : public ComponentManagerBase
 {
     static const uint16_t id;
     typedef Type CompType;
-    
+    typedef FixedSizePool<CompType, RosterMaxSize> CompPool;
+    typedef typename FixedSizePool<CompType, RosterMaxSize>::Handle HandleType;
+
     ComponentManagerBaseT()
     {
         reset();
@@ -34,9 +36,9 @@ struct ComponentManagerBaseT : public ComponentManagerBase
         _pool.reset();
     }
     
-    Handle create(uint32_t ent)
+    HandleType create(uint32_t ent)
     {
-        Handle h = _pool.allocate();
+        HandleType h = _pool.allocate();
         do {
             if(h == invalid_handle)
                 break;
@@ -48,14 +50,14 @@ struct ComponentManagerBaseT : public ComponentManagerBase
         return h;
     }
     
-    void destroy(Handle handle)
+    void destroy(HandleType handle)
     {
         uint32_t idx = handle.idx;
         _nodes[idx] = _nodes[--_count];
         _pool.free(handle);
     }
     
-    const CompType* get(Handle handle)
+    const CompType* get(HandleType handle)
     {
         return _pool.resolve(handle);
     }
@@ -76,9 +78,8 @@ struct ComponentManagerBaseT : public ComponentManagerBase
     {
         
     }
-    typedef FixedSizePool<CompType, RosterMaxSize> CompPool;
     
-    Handle          _nodes[RosterMaxSize];
+    HandleType      _nodes[RosterMaxSize];
     uint32_t        _count; // current used count;
     CompPool        _pool;
 };

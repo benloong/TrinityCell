@@ -10,16 +10,20 @@
 #define __TrinityCell__timer__
 
 namespace cell {
-    class Timer{
-    public:
-        float _timeScale;
-        float _time;
-        float _realTime;
-        float _deltaTime;
-        Timer();
-        ~Timer();
+
+    //game time in seconds
+    //scalable timer 
+    namespace Timer {
+        float  getTimeScale();
+        void   setTimeScale( float timeScale);
+        float  getDeltaTime();
+        float  getTime();
+        float  getRealTime();
+        void   resetTimer();
+
+        //update timer per game loop 
         void update();
-    };
+    }
 }
 
 #endif /* defined(__TrinityCell__timer__) */

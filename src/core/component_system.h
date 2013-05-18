@@ -11,8 +11,11 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <functional>
 #include "fixed_size_pool.h"
 #include "component_roster_base.h"
+#include "component_detail.h"
+#include "hierarchy.h"
 
 namespace cell {
     //class ComponentManagerBase;
@@ -35,8 +38,10 @@ namespace cell {
     }
     
     template<typename Type>
-    Handle addComponent(ComponentSystem* comp_system, uint32_t ent)
+    typename Type::ManagerType::HandleType addComponent(ComponentSystem* comp_system, typename Type::ManagerType::HandleType ent)
     {
+        typedef typename Type::ManagerType Manager;
+        typedef typename Manager::HandleType  Handle;
         Handle h = invalid_handle;
         typename Type::ManagerType *mgr = (typename Type::ManagerType *)comp_system->_comp_managers[Type::type_id].get();
         if(mgr == nullptr){
@@ -51,7 +56,7 @@ namespace cell {
     }
     
     template<typename Type>
-    void destroyComponent(ComponentSystem* comp_system, Handle comp_handle)
+    void destroyComponent(ComponentSystem* comp_system, typename Type::ManagerType::HandleType comp_handle)
     {
         typename Type::ManagerType *mgr = (typename Type::ManagerType *)comp_system->_comp_managers[Type::type_id].get();
         assert(mgr != nullptr && "cannot find the Manager of this comonent type!");
@@ -59,7 +64,7 @@ namespace cell {
     }
     
     template<typename Type>
-    Type* resolveHandle(ComponentSystem* comp_system, Handle comp_handle)
+    Type* resolveHandle(ComponentSystem* comp_system, typename Type::ManagerType::HandleType comp_handle)
     {
         typename Type::ManagerType *mgr = (typename Type::ManagerType *)comp_system->_comp_managers[Type::type_id].get();
         assert(mgr != nullptr && "cannot find the Manager of this component type!");
@@ -89,7 +94,7 @@ namespace cell {
         return i;
     }
     
-    void updateAllComponents(ComponentSystem* comp_system)
+    inline void updateAllComponents(ComponentSystem* comp_system)
     {
         for (auto it = comp_system->_updates.begin(); it != comp_system->_updates.end(); it++) {
             it->second();

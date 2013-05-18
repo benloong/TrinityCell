@@ -11,6 +11,8 @@
 
 #include "component_system.h"
 #include "hierarchy.h"
+#include "timer.h"
+
 using namespace cell;
 using namespace std;
 
@@ -34,8 +36,21 @@ int main()
 //    }
 //    std::cout<<"hello world\n";
     //Transform::ManagerType *p = new Transform::ManagerType();
+    Timer::resetTimer();
+    Timer::setTimeScale(-1.0f);
+    for(int i = 0 ; i < 100; i++)
+    {
+        _sleep(100);
+        Timer::update();
+        std::cout << Timer::getDeltaTime() << std::endl;
+        std::cout << Timer::getRealTime() << std::endl;
+        std::cout << Timer::getTime()   << std::endl;
+        std::cout << "==============================\n";
+    }
+    getchar();
+    //return 0;
     ComponentSystem compSystem;
-    Handle h = addComponent<Transform>(&compSystem, 10);
+    Transform::ManagerType::HandleType h = addComponent<Transform>(&compSystem, 10);
     const Transform* t = getComponent<Transform>(&compSystem, 10);
     
     Transform * arr[10];

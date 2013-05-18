@@ -25,12 +25,11 @@ namespace cell {
     struct ComponentBaseT : public ComponentBase
     {
         typedef _AllocType ManagerType;
-        static const uint16_t type_id;
+        //Component type id
+        static const uint16_t type_id; 
         ComponentBaseT() : ComponentBase(type_id) { }
     };
-//    
-//    template<typename Comp>
-//    uint16_t ComponentBaseT<Comp>::type_id = 0;
+
 }//end cell namespace
 
 #endif /* defined(__TrinityCell__component_base__) */

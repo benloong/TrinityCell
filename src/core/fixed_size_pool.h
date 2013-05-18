@@ -10,38 +10,47 @@
 #define TrinityCell_linear_mem_pool_h
 #include <cstdint>
 #include <assert.h>
-struct Handle {
-    uint32_t idx : 16;
-    uint32_t key : 16;
+
+template<size_t Bits = 16>
+struct Handle_T {
+	enum {
+		ID_Bits = Bits,
+		KEY_Bits = 32-Bits
+	};
+
+    uint32_t idx : ID_Bits;
+	uint32_t key : KEY_Bits;
     
     inline operator uint32_t() const
     {
-        return idx << 16 | key;
+        return idx << ID_Bits | key;
     }
     
-    Handle(uint32_t num = 0) : idx(num>>16), key(num)
+    Handle_T(uint32_t num = 0) : idx(num>>ID_Bits), key(num)
     {
         
     }
     
-    Handle(uint32_t idx, uint32_t key): idx(idx), key(key)
+    Handle_T(uint32_t idx, uint32_t key): idx(idx), key(key)
     {
         
     }
 };
 
-const Handle invalid_handle = 0xffffffff;
+typedef uint32_t handle_t;
+const handle_t invalid_handle = -1;
 
-template <typename DataType, uint32_t POOL_SIZE = 1<<16 >
+template <typename DataType, uint32_t POOL_SIZE = 1<<16, size_t IDX_Bits = 16 >
 struct FixedSizePool {
-    
+    typedef Handle_T<IDX_Bits> Handle;
+	static_assert(POOL_SIZE <= 1<<IDX_Bits, "POOL_SIZE must below 1<<IDX_Bits");
     struct Entry
     {
-        uint32_t    next_free : 16;
-        uint32_t    key       : 16;
+        uint32_t    next_free : IDX_Bits;
+        uint32_t    key       : 32-IDX_Bits;
     };
     
-    uint32_t        first_free = 0;
+    uint32_t        first_free;
     Entry           entries[POOL_SIZE];//for indices
     DataType        pool[POOL_SIZE];   // raw array
     
@@ -61,7 +70,7 @@ struct FixedSizePool {
     
     Handle allocate()
     {
-        if (first_free >= POOL_SIZE || first_free >= 1<<16) {
+        if (first_free >= POOL_SIZE || first_free >= 1<<IDX_Bits) {
             return invalid_handle;
         }
         uint32_t idx = first_free;

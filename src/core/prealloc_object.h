@@ -23,3 +23,26 @@ typename prealloc_object<Type, Size>::TypeArray prealloc_object<Type, Size>::__a
 template<typename Type, int Size>
 int prealloc_object<Type, Size>::__anchor = 0;
 #endif
+
+
+template <typename _Type>
+struct Container
+{ 
+	typedef _Type value_type;
+	typedef int32_t handle_type;
+};
+
+template <typename _Type>
+struct Component
+{
+	typedef _Type manager_type;
+	typedef typename _Type::value_type container_value_type;
+};
+
+template <typename _Type, typename _Container>
+struct ComponentManager
+{
+	typedef _Type comp_type;
+	typedef Container<int> container_type;
+	typedef typename container_type::handle_type handle_type;
+};

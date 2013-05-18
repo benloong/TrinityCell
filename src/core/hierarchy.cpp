@@ -14,4 +14,8 @@ namespace cell {
     template<>
     const uint16_t ComponentBaseT<TransformHierarchy>::type_id = 1;
 
+    void TransformHierarchy::update()
+    {
+
+    }
 }

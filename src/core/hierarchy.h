@@ -42,15 +42,24 @@ namespace cell {
         template<typename StreamType>
         void deserialize(const StreamType & bitstream);
         
-        void    setParent(Handle handle, Handle parent);
-        Handle  root(Handle handle);
+        void    setParent(HandleType handle, HandleType parent);
+        HandleType  root(HandleType handle);
         
-        void    destroyTransform(Handle trans);
+        void    destroyTransform(HandleType trans);
         
-        void    update()
-        {
-            std::cout<<"transform update\n";
-        }
+        void    update();
     };
+
+    template <typename OutStreameType>
+    void TransformHierarchy::serialize(OutStreameType& out_stream)
+    {
+        out_stream.write(&_pool, sizeof(_pool));
+    }
+
+    template <typename InStreamType>
+    void TransformHierarchy::deserialize(InStreamType & instream)
+    {
+        out_stream.read(&_pool, sizeof(_pool));
+    }
 }
 #endif /* defined(__TrinityCell__hierarchy__) */
