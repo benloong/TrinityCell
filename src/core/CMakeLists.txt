@@ -18,12 +18,6 @@ SET(CELL_SRC
 	input_system.h
 	render_system.cpp
 	render_system.h
-<<<<<<< HEAD
-=======
-	thread_pool.h
-	timer.cpp
-	timer.h
->>>>>>> 52e4340eccc1b12141f0261ef39e4409bde8d461
 )
 
 ADD_EXECUTABLE(CellCore ${CELL_SRC})
