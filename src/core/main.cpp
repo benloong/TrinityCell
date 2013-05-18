@@ -7,15 +7,12 @@
 #include "component.h"
 #include <chrono>
 #include "entity.h"
-#include "type_identifier.h"
 #include "fixed_size_pool.h"
+
+#include "component_system.h"
 #include "hierarchy.h"
-
-
-typedef FixedSizePool<int> int_pool;
-typedef ComponentManagerBaseT<int, 10> IntMgr ;
 using namespace cell;
-
+using namespace std;
 
 int main()
 {
@@ -36,23 +33,18 @@ int main()
 //    }
 //    }
 //    std::cout<<"hello world\n";
-    IntMgr int_mgr;
+    //Transform::ManagerType *p = new Transform::ManagerType();
+    ComponentSystem compSystem;
+    Handle h = addComponent<Transform>(&compSystem, 10);
+    const Transform* t = getComponent<Transform>(&compSystem, 10);
     
-    Handle h1 = int_mgr.create();
+    Transform * arr[10];
+    uint32_t c = getComponents(&compSystem, arr, 10);
     
-    int * p = int_mgr.get(h1);
-    *p = 1000;
-    h1 = int_mgr.create();
-    p = int_mgr.get(h1);
+    updateAllComponents(&compSystem);
     
-    *p = 2000;
-    
-    Handle h2 = int_mgr.create();
-    p = int_mgr.get(h2);
-    *p = 3000;
-    int_mgr.destroy(h1);
-    h1 = int_mgr.create();
-//
+    cout << t->_ent_id << endl;
+    //
 //    ComponentManager compMgr;
 //    compMgr.registerComponent<MyComponent>(5);
 //    

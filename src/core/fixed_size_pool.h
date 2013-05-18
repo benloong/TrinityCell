@@ -86,6 +86,11 @@ struct FixedSizePool {
             return &pool[idx];
         return nullptr;
     }
+    
+    DataType* data()
+    {
+        return pool;
+    }
 };
 
 #endif

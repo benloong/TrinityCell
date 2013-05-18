@@ -12,10 +12,12 @@
 #include "fixed_size_pool.h"
 #include "component_detail.h"
 #include "component_roster_base.h"
+#include <iostream>
 
 namespace cell {
     
-    struct Transform : public ComponentBaseT<Transform>
+    class TransformHierarchy;
+    struct Transform : public ComponentBaseT<TransformHierarchy>
     {
         uint16_t parent;
         uint16_t first_child;
@@ -32,11 +34,8 @@ namespace cell {
         float  local_mat[16];
     };
     
-    class TransformHierarchy : public ComponentManagerBaseT<Transform, 1<<16>
+    class TransformHierarchy : public ComponentManagerBaseT<Transform, 1<<16 >
     {
-        enum {
-            MAX_COUNT = 1<<16
-        };
     public:
         template<typename StreamType>
         void serialize(StreamType & bitstream);
@@ -47,6 +46,11 @@ namespace cell {
         Handle  root(Handle handle);
         
         void    destroyTransform(Handle trans);
+        
+        void    update()
+        {
+            std::cout<<"transform update\n";
+        }
     };
 }
 #endif /* defined(__TrinityCell__hierarchy__) */
