@@ -10,7 +10,6 @@
 #include "logger.h"
 #include "input_system.h"
 #include "entity_system.h"
-#include "thread_pool.h"
 #include "render_system.h"
 
 using namespace cell;

@@ -9,16 +9,15 @@ SET(CELL_SRC
 	component_detail.h
 	component.cpp
 	component.h
+	component_roster_base.h
 	entity.h
+	fixed_size_pool.h
+	hierarchy.h
+	hierarchy.cpp
 	input_system.cpp
 	input_system.h
-	linear_mem_pool.h
 	render_system.cpp
 	render_system.h
-	thread_pool.h
-	timer.cpp
-	timer.h
-	type_identifier.h
 )
 
 ADD_EXECUTABLE(CellCore ${CELL_SRC})

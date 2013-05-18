@@ -8,42 +8,42 @@
 
 #include "logger.h"
 #include <fstream>
-#include "thread_pool.h"
+//#include "thread_pool.h"
 
 namespace cell {
     class LoggerImpl{
         std::ofstream  file;
-        ThreadPool*    thread;
+        //ThreadPool*    thread;
         
     public:
-        LoggerImpl(const char *log_file):thread(new ThreadPool(1))
+        LoggerImpl(const char *log_file)//:thread(new ThreadPool(1))
         {
             file.open(log_file);
         }
         ~LoggerImpl()
         {
-            delete thread;
+            //delete thread;
             file.close();
         }
         void Log(const char *info)
         {
-            thread->enqueue([this, info]{
+            /*thread->enqueue([this, info]{
                 this->_Log(info);
-            });
+            });*/
         }
         
         void LogError(const char *err)
         {
-            thread->enqueue([this, err]{
+           /* thread->enqueue([this, err]{
                 this->_LogError(err);
-            });
+            });*/
         }
         
         void LogWarning(const char *warn)
         {
-            thread->enqueue([this, warn]{
+            /*thread->enqueue([this, warn]{
                 this->_LogWarning(warn);
-            });
+            });*/
         }
         
         void _Log(const char *info)
