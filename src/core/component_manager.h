@@ -18,18 +18,22 @@ namespace DCS {
     
     class ComponentManager {
         InstancePool<entity_id_t, 1 << 16>      entity_pool;            
-        std::map<int, std::unique_ptr<Pool*> >  component_instance_pools;
+        std::map<int, std::unique_ptr<Pool> >  component_instance_pools;
         
     public:
         
         template<typename _Type>
         handle_t addComponent(entity_id_t ent)
         {
-            if(component_instance_pools[_Type::id] == nullptr) {
-                component_instance_pools[_Type::id].reset(new InstancePool<_Type, _Type::MAX_COUNT>);
+            typedef typename InstancePool<_Type, _Type::MAX_COUNT> CompInstancePool;
+            CompInstancePool * pool = static_cast<CompInstancePool*> (component_instance_pools[_Type::id].get());
+            if(pool == nullptr) 
+            {
+                pool = new CompInstancePool();
+                component_instance_pools[_Type::id].reset(pool);
             }
-            handle_t h = component_instance_pools[_Type::id]->allocate();
-            _Type * comp = component_instance_pools[_Type::id]->resolve(h);
+            handle_t h = pool->allocate();
+            _Type * comp = pool->resolve(h);
             if(comp != nullptr)
                 comp->init(ent);
             return h;
@@ -38,7 +42,9 @@ namespace DCS {
         template<typename _Type>
         void  destroyComponent(handle_t h)
         {
-            _Type* comp = component_instance_pools[_Type::id]->resolve(h);
+            typedef typename InstancePool<_Type, _Type::MAX_COUNT> CompInstancPool;
+            CompInstancPool *pool = static_cast<CompInstancePool*> (component_instance_pools[_Type::id]);
+            _Type* comp = pool->resolve(h);
             assert(comp != nullptr && "try to destroy an invalid handle.");
             comp->uninit();
             component_instance_pools[_Type::id]->free(h);

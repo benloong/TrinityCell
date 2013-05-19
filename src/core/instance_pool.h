@@ -16,13 +16,16 @@
 
 typedef int handle_t;
 
-struct Pool {
+class Pool {
+public:
+    Pool(){}
     virtual ~Pool() {}
 };
 
 template<typename _DataType, size_t _PoolSize, size_t _BitWidth = 16>
-struct InstancePool : public Pool
+class InstancePool : public Pool
 {
+public:
     static_assert(_BitWidth < 20, "Too large index bit width, must be smaller than 20.");
     static_assert(_PoolSize <= 1 << _BitWidth, "_PoolSize out of index. _PoolSize must be smaller than 1<<_BitWidth.");
     typedef _DataType Data;
@@ -45,6 +48,9 @@ struct InstancePool : public Pool
         Handle(int h) : idx(h>>ID_BIT_WIDTH), key(h)
         {
             
+        }
+        Handle(int idx, int key) : idx(idx) , key(key)
+        {
         }
 	};
     
@@ -82,11 +88,11 @@ struct InstancePool : public Pool
     Handle allocate()
     {
         if (first_free >= _PoolSize || first_free >= 1<<ID_BIT_WIDTH) {
-            return {-1, -1};
+            return Handle(-1);
         }
         uint32_t idx = first_free;
         first_free = entries[idx].next_free;
-        Handle h = {idx, entries[idx].key};
+        Handle h(idx, entries[idx].key);
         allocated.push_back(h);
         return h;
     }

@@ -9,6 +9,7 @@
 #ifndef __TrinityCell__context__
 #define __TrinityCell__context__
 
+#define TEST
 namespace cell {
     class Logger;
     class EntitySystem;

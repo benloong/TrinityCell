@@ -15,6 +15,7 @@
 //const typename Component_T<Comp_Type, IndexBitWidth>::PoolType Component_T<Comp_Type, IndexBitWidth>::pool;
 namespace  DCS {
     
+    //max camera count set to 32, so we can use an int bit mask for culling
     struct Camera  : public Component_T<Camera, 32>
     {
         float  fov;
