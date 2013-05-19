@@ -10,6 +10,7 @@
 #define __TrinityCell__component_manager__
 
 #include <map>
+#include <memory>
 #include "instance_pool.h"
 #include "entity.h"
 

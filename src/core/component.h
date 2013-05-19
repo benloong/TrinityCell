@@ -25,18 +25,21 @@ namespace DCS {
         entity_id_t ent;
     };
     
-    template<typename _Type, unsigned int _MaxSize = 32>
+    template<typename _Type, unsigned int _MaxSize = 4096>
     struct Component_T : public Component
     {
         enum {
             MAX_COUNT = _MaxSize
         };
         
-        void init(entity_id_t ent);
-        void uninit();
+        void init(entity_id_t ent) { }
+        void uninit() { }
         
         static const int id;
     };
+
+    template<typename _Type, unsigned int _MaxSize>
+    const int Component_T<_Type, _MaxSize>::id = -1;
 
     namespace EntityUtils
     {

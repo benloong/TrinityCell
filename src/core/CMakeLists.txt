@@ -1,7 +1,11 @@
 SET(CELL_SRC 
+	camera.cpp
+	camera.h
 	component.cpp
 	component.h
 	component_detail.h
+	component_manager.cpp
+	component_manager.h
 	component_roster_base.h
 	component_system.cpp
 	component_system.h
@@ -16,6 +20,8 @@ SET(CELL_SRC
 	hierarchy.h
 	input_system.cpp
 	input_system.h
+	instance_pool.cpp
+	instance_pool.h
 	logger.cpp
 	logger.h
 	main.cpp
