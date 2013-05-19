@@ -12,6 +12,7 @@
 #include "component_system.h"
 #include "hierarchy.h"
 #include "timer.h"
+#include <thread>
 
 using namespace cell;
 using namespace std;
@@ -40,7 +41,7 @@ int main()
     Timer::setTimeScale(-1.0f);
     for(int i = 0 ; i < 100; i++)
     {
-        _sleep(100);
+        std::this_thread::sleep_for(std::chrono::nanoseconds(100000));
         Timer::update();
         std::cout << Timer::getDeltaTime() << std::endl;
         std::cout << Timer::getRealTime() << std::endl;

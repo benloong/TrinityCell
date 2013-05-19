@@ -40,7 +40,7 @@ struct Handle_T {
 typedef uint32_t handle_t;
 const handle_t invalid_handle = -1;
 
-template <typename DataType, uint32_t POOL_SIZE = 1<<16, size_t IDX_Bits = 16 >
+template <typename DataType, uint32_t POOL_SIZE = 1<<16 - 1, size_t IDX_Bits = 16 >
 struct FixedSizePool {
     typedef Handle_T<IDX_Bits> Handle;
 	static_assert(POOL_SIZE <= 1<<IDX_Bits, "POOL_SIZE must below 1<<IDX_Bits");

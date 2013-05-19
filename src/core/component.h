@@ -8,22 +8,36 @@
 
 #ifndef __TrinityCell__component__
 #define __TrinityCell__component__
-#include <memory>
-#include <vector>
-#include <map>
-#include <set>
-#include <cassert>
-#include <iostream>
-#include <exception>
-#include "component_detail.h"
 
-namespace cell {
+#include "entity.h"
+
+//dynamic component system
+
+/**
+ Dynamic component system design
+ key template class: ComponentBaseT, ComponentManagerBaseT  fixed_size_pool  Handle_T
+ Component derived from ComonentBaseT with a specified ManagerType
+ */
+
+namespace DCS {
     
-    /** 
-        Component system design
-        key template class: ComponentBaseT, ComponentManagerBaseT  fixed_size_pool  Handle_T
-        Component derived from ComonentBaseT with a specified ManagerType 
-    */
+    struct Component {
+        entity_id_t ent;
+    };
+    
+    template<typename _Type, unsigned int _MaxSize = 32>
+    struct Component_T : public Component
+    {
+        enum {
+            MAX_COUNT = _MaxSize
+        };
+        
+        void init(entity_id_t ent);
+        void uninit();
+        
+        static const int id;
+    };
+
     namespace EntityUtils
     {
         template<typename Type>

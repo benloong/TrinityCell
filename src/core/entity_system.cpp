@@ -20,7 +20,7 @@ namespace cell{
 
 using namespace cell;
 
-EntitySystem::EntitySystem(const Context &ctx):pImpl(new EntitySystemImpl())
+EntitySystem::EntitySystem(const Context &ctx)
 {
     
 }

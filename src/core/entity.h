@@ -8,10 +8,7 @@
 
 #ifndef TrinityCell_entity_h
 #define TrinityCell_entity_h
+#include <stdint.h>
+typedef uint32_t entity_id_t;
 
-typedef unsigned int entity_id_t;
-
-namespace Entity {
-    
-}
 #endif

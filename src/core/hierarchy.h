@@ -57,9 +57,9 @@ namespace cell {
     }
 
     template <typename InStreamType>
-    void TransformHierarchy::deserialize(InStreamType & instream)
+    void TransformHierarchy::deserialize(const InStreamType & instream)
     {
-        out_stream.read(&_pool, sizeof(_pool));
+        instream.read(&_pool, sizeof(_pool));
     }
 }
 #endif /* defined(__TrinityCell__hierarchy__) */

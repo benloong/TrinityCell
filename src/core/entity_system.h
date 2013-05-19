@@ -11,24 +11,26 @@
 
 #include <vector>
 #include <string>
-#include <memory>
 
 namespace cell {
     class Context;
-    class EntitySystemImpl;
-    typedef int entity_id_t;
+    typedef uint32_t entity_id_t;
     
     class EntitySystem
     {
-        std::unique_ptr<EntitySystemImpl> pImpl;
+        
     public:
         EntitySystem(const Context &ctx);
         ~EntitySystem();
         entity_id_t createEntity();
         void        destroyEntity(entity_id_t id);
         
-        template<typename Cmp_T>
+        template<typename Comp_T>
         void addComponent(entity_id_t ent);
+        
+        
+        std::vector<entity_id_t> entities;
+        std::vector<std::string> entity_names;
     };
 }
 
