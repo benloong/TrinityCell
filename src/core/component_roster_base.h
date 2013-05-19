@@ -21,6 +21,10 @@ template<typename Type, uint32_t RosterMaxSize>
 struct ComponentManagerBaseT : public ComponentManagerBase
 {
     static const uint16_t id;
+    enum 
+    {
+        INVALID_IDX = 1<<16
+    };
     typedef Type CompType;
     typedef FixedSizePool<CompType, RosterMaxSize> CompPool;
     typedef typename FixedSizePool<CompType, RosterMaxSize>::Handle HandleType;

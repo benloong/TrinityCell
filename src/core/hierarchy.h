@@ -37,12 +37,12 @@ namespace cell {
     class TransformHierarchy : public ComponentManagerBaseT<Transform, 1<<16 >
     {
     public:
-        template<typename StreamType>
-        void serialize(StreamType & bitstream);
-        template<typename StreamType>
-        void deserialize(const StreamType & bitstream);
+        template<typename OutStreameType>
+        void serialize(OutStreameType & bitstream);
+        template<typename InStreamType>
+        void deserialize(const InStreamType & bitstream);
         
-        void    setParent(HandleType handle, HandleType parent);
+        void    setParent(HandleType handle, HandleType parent = invalid_handle);
         HandleType  root(HandleType handle);
         
         void    destroyTransform(HandleType trans);
