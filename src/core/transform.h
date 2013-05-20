@@ -37,6 +37,15 @@ public:
     int childCount();
     Transform* getChild(int index);
     Transform* getParent();
+    
+    Transform();
 };
+
+namespace TransformUtil
+{
+    void setParent(handle_t child, handle_t parent);
+    handle_t getRoot();
+    
+}
 
 #endif /* defined(__TrinityCell__transform__) */
