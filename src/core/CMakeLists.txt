@@ -1,4 +1,6 @@
 SET(CELL_SRC 
+ 	audio_source.cpp
+	audio_source.h
 	camera.cpp
 	camera.h
 	component.cpp
@@ -22,13 +24,21 @@ SET(CELL_SRC
 	input_system.h
 	instance_pool.cpp
 	instance_pool.h
+	light.cpp
+	light.h
 	logger.cpp
 	logger.h
 	main.cpp
+	particle_effect.cpp
+	particle_effect.h
 	render_system.cpp
 	render_system.h
+	renderable.cpp
+	renderable.h
 	timer.cpp
 	timer.h
+    transform.cpp
+    transform.h
 )
 
 ADD_EXECUTABLE(CellCore ${CELL_SRC})

@@ -16,23 +16,23 @@
 
 typedef int handle_t;
 
-class Pool {
+class PoolBase {
 public:
-    Pool(){}
-    virtual ~Pool() {}
+    PoolBase(){}
+    virtual ~PoolBase() {}
 };
 
-template<typename _DataType, size_t _PoolSize, size_t _BitWidth = 16>
-class InstancePool : public Pool
+template<typename _Ty, size_t _PoolSize, size_t _BitWidth = 16>
+class InstancePool : public PoolBase
 {
 public:
     static_assert(_BitWidth < 20, "Too large index bit width, must be smaller than 20.");
     static_assert(_PoolSize <= 1 << _BitWidth, "_PoolSize out of index. _PoolSize must be smaller than 1<<_BitWidth.");
-    typedef _DataType Data;
+    typedef _Ty DataType;
     
     enum  {
-		ID_BIT_WIDTH = _BitWidth,
-		KEY_BIT_WIDTH = 32 - _BitWidth
+		ID_BIT_WIDTH    = _BitWidth,
+		KEY_BIT_WIDTH   = 32 - _BitWidth
 	};
     
 	struct Handle
@@ -61,10 +61,10 @@ public:
 	};
     
     std::array<Entry,   _PoolSize>  entries;
-    std::array<Data,    _PoolSize>  pool;
+    std::array<DataType,_PoolSize>  pool;
 	int                             first_free;
     
-    std::vector<handle_t>             allocated;
+    std::vector<handle_t>           allocated;
     
 	InstancePool() {
         reset();
@@ -114,15 +114,15 @@ public:
         }
     }
     
-    Data* resolve(Handle handle)
+    DataType* resolve(Handle handle)
     {
-        Data* p = nullptr;
+        DataType* p = nullptr;
         if(handle.idx != -1 && handle.idx < _PoolSize && entries[handle.idx].key == handle.key)
             p = &pool[handle.idx];
         return p;
     }
     
-    Data* data()
+    inline DataType* data()
     {
         return pool.data();
     }

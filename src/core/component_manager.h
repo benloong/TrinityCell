@@ -12,26 +12,41 @@
 #include <map>
 #include <memory>
 #include "instance_pool.h"
+
 #include "entity.h"
 
+#include "component_types.h"
+
 namespace DCS {
+    typedef int component_id_t;
     
     class ComponentManager {
-        InstancePool<entity_id_t, 1 << 16>      entity_pool;            
-        std::map<int, std::unique_ptr<Pool> >  component_instance_pools;
+        InstancePool<entity_id_t, 1 << 16>          entity_pool;
+        std::map<int, std::unique_ptr<PoolBase> >   component_instance_pools;
+        
+        std::map<entity_id_t, std::map<component_id_t, handle_t>> componentByEnt;
+        std::map<entity_id_t, component_id_t>   transformByEnt;
+        
         
     public:
         
         template<typename _Type>
-        handle_t addComponent(entity_id_t ent)
+        typename ComponentTraits<_Type>::pool_type* getComponentInstancePool()
         {
-            typedef typename InstancePool<_Type, _Type::MAX_COUNT> CompInstancePool;
-            CompInstancePool * pool = static_cast<CompInstancePool*> (component_instance_pools[_Type::id].get());
-            if(pool == nullptr) 
+            typename ComponentTraits<_Type>::pool_type *pool = static_cast<typename ComponentTraits<_Type>::pool_type*> (component_instance_pools[_Type::id]);
+            if(pool == nullptr)
             {
-                pool = new CompInstancePool();
+                pool = new typename ComponentTraits<_Type>::pool_type();
                 component_instance_pools[_Type::id].reset(pool);
             }
+            return pool;
+        }
+        
+        template<typename _Type>
+        handle_t addComponent(entity_id_t ent)
+        {
+            typedef InstancePool<_Type, _Type::MAX_COUNT> CompInstancePool;
+            CompInstancePool * pool = getComponentInstancePool<_Type>();
             handle_t h = pool->allocate();
             _Type * comp = pool->resolve(h);
             if(comp != nullptr)
@@ -42,12 +57,37 @@ namespace DCS {
         template<typename _Type>
         void  destroyComponent(handle_t h)
         {
-            typedef typename InstancePool<_Type, _Type::MAX_COUNT> CompInstancPool;
-            CompInstancPool *pool = static_cast<CompInstancePool*> (component_instance_pools[_Type::id]);
+            typedef InstancePool<_Type, _Type::MAX_COUNT> CompInstancePool;
+            CompInstancePool *pool = static_cast<CompInstancePool*> (component_instance_pools[_Type::id]);
             _Type* comp = pool->resolve(h);
             assert(comp != nullptr && "try to destroy an invalid handle.");
             comp->uninit();
             component_instance_pools[_Type::id]->free(h);
+        }
+        
+        template<typename _Type>
+        _Type* resolveHandle(handle_t h)
+        {
+            typedef InstancePool<_Type, _Type::MAX_COUNT> CompInstancePool;
+            CompInstancePool *pool = static_cast<CompInstancePool*> (component_instance_pools[_Type::id]);
+            assert(pool != nullptr && "not register component");
+            return pool->resolve(h);
+        }
+        
+        template<typename _Type>
+        _Type* getComponent(entity_id_t ent)
+        {
+            typedef InstancePool<_Type, _Type::MAX_COUNT> CompInstancePool;
+            CompInstancePool *pool = static_cast<CompInstancePool*> (component_instance_pools[_Type::id]);
+            
+            _Type* data = pool->data();
+            for(auto it = pool->allocated.begin(); it != pool->allocated.end(); it++ )
+            {
+                if( data[it->idx].ent == ent) {
+                    return &data[it->idx];
+                }
+            }
+            return nullptr;
         }
         
     };

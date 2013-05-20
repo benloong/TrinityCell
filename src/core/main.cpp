@@ -7,10 +7,7 @@
 #include "component.h"
 #include <chrono>
 #include "entity.h"
-#include "fixed_size_pool.h"
 
-#include "component_system.h"
-#include "hierarchy.h"
 #include "timer.h"
 #include <thread>
 
@@ -38,10 +35,10 @@ int main()
 //    std::cout<<"hello world\n";
     //Transform::ManagerType *p = new Transform::ManagerType();
     Timer::resetTimer();
-    Timer::setTimeScale(-1.0f);
-    for(int i = 0 ; i < 100; i++)
+    //Timer::setTimeScale(-1.0f);
+    for(int i = 0 ; i < 10; i++)
     {
-        std::this_thread::sleep_for(std::chrono::nanoseconds(100000));
+        std::this_thread::sleep_for(std::chrono::nanoseconds(1000000000));
         Timer::update();
         std::cout << Timer::getDeltaTime() << std::endl;
         std::cout << Timer::getRealTime() << std::endl;
@@ -50,16 +47,7 @@ int main()
     }
     getchar();
     //return 0;
-    ComponentSystem compSystem;
-    Transform::ManagerType::HandleType h = addComponent<Transform>(&compSystem, 10);
-    const Transform* t = getComponent<Transform>(&compSystem, 10);
-    
-    Transform * arr[10];
-    uint32_t c = getComponents(&compSystem, arr, 10);
-    
-    updateAllComponents(&compSystem);
-    
-    cout << t->_ent_id << endl;
+
     //
 //    ComponentManager compMgr;
 //    compMgr.registerComponent<MyComponent>(5);

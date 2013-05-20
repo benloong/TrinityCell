@@ -21,6 +21,11 @@ namespace  DCS {
         float  fov;
         float  far;
         float  near;
+        float  enabled;
+        float  aspect;
+        
+        float  clearColor[3];
+        bool   orthographic;
     };
 
 }
