@@ -26,12 +26,12 @@ namespace cell {
 
         auto t0  = high_resolution_clock::now();
 
-        const float to_seconds = 1.0f/10000000;
+        const float nano2secs = 1.0f/1000000000;
         void update()
         {
             auto t1 = high_resolution_clock::now();
             high_resolution_clock::rep delta = (t1-t0).count();
-            float delta_in_secs = delta * to_seconds;
+            float delta_in_secs = delta * nano2secs;
             timer.real_time += delta_in_secs;
             timer.delta = delta_in_secs * timer.scale;
             timer.time += timer.delta;
