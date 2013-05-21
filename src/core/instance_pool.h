@@ -80,7 +80,7 @@ public:
         for(size_t i = 0; i < _PoolSize; ++i )
         {
             entries[i].next_free = i+1;
-            entries[i].key       = 0;
+            entries[i].key       = 1;
         }
         allocated.clear();
     }
@@ -88,7 +88,7 @@ public:
     Handle allocate()
     {
         if (first_free >= _PoolSize || first_free >= 1<<ID_BIT_WIDTH) {
-            return Handle(-1);
+            return Handle(0);
         }
         uint32_t idx = first_free;
         first_free = entries[idx].next_free;
@@ -100,7 +100,7 @@ public:
     void free(Handle handle)
     {
         int idx = handle.idx;
-        assert(handle != -1 && "try to free an invalid handle.");
+        assert(handle != 0 && "try to free an invalid handle.");
         assert(idx < _PoolSize);
         entries[idx].next_free = first_free;
         entries[idx].key += 1;
@@ -117,7 +117,7 @@ public:
     DataType* resolve(Handle handle)
     {
         DataType* p = nullptr;
-        if(handle.idx != -1 && handle.idx < _PoolSize && entries[handle.idx].key == handle.key)
+        if(handle != 0 && handle.idx < _PoolSize && entries[handle.idx].key == handle.key)
             p = &pool[handle.idx];
         return p;
     }

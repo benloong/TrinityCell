@@ -24,8 +24,7 @@ class ComponentManager {
     InstancePool<entity_id_t, 1 << 16>          entity_pool;
     std::map<int, std::unique_ptr<PoolBase> >   component_instance_pools;
     
-    std::map<entity_id_t, std::map<component_id_t, handle_t>> componentByEnt;
-    std::map<entity_id_t, component_id_t>   transformByEnt;
+    std::map<entity_id_t, std::map<component_id_t, std::vector<handle_t> > > componentByEnt;
     
     
 public:
@@ -50,6 +49,7 @@ public:
         handle_t h = pool->allocate();
         _Type * comp = pool->resolve(h);
         if(comp != nullptr) {
+            componentByEnt[ent][_Type::id].push_back(h);
             comp->ent = ent;
             comp->init(ent);
         }
@@ -63,6 +63,7 @@ public:
         CompInstancePool *pool = static_cast<CompInstancePool*> (component_instance_pools[_Type::id]);
         _Type* comp = pool->resolve(h);
         assert(comp != nullptr && "try to destroy an invalid handle.");
+        std::remove(componentByEnt[comp->ent][_Type::id].begin(),componentByEnt[comp->ent][_Type::id].begin().end(), h);
         comp->uninit();
         component_instance_pools[_Type::id]->free(h);
     }

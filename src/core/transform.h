@@ -14,10 +14,10 @@
 class Transform : public DCS::Component_T<Transform, 1<<16 > {
     
 public:
-    uint16_t parent;
-    uint16_t first_child;
-    uint16_t prev_sibling;
-    uint16_t next_sibling;
+    handle_t parent;
+    handle_t first_child;
+    handle_t prev_sibling;
+    handle_t next_sibling;
     uint16_t level;
     uint16_t bitmask; // update bit mask
     
@@ -28,24 +28,20 @@ public:
     float  world_mat[16];
     float  local_mat[16];
     
-    
-    void setParent(handle_t parentHandle);
-    void setParent(Transform* parent);
-    
-    Transform* getRoot();
-    
-    int childCount();
-    Transform* getChild(int index);
-    Transform* getParent();
-    
     Transform();
-};
-
-namespace TransformUtil
-{
-    void setParent(handle_t child, handle_t parent);
-    handle_t getRoot();
     
+    void init();
+    void uninit();
+};
+    
+namespace Hierarchy
+{
+    void        setParent(handle_t child, handle_t parent);
+    handle_t    getParent(handle_t trans);
+    handle_t    getRoot(handle_t trans);
+    int         childCount(handle_t trans);
+    handle_t    getChild(int index);
+    
+    void        updateHierarchy();
 }
-
 #endif /* defined(__TrinityCell__transform__) */
