@@ -5,21 +5,13 @@ SET(CELL_SRC
 	camera.h
 	component.cpp
 	component.h
-	component_detail.h
 	component_manager.cpp
 	component_manager.h
-	component_roster_base.h
-	component_system.cpp
-	component_system.h
 	component_types.h
 	context.cpp
 	context.h
-	entity.h
 	entity_system.cpp
 	entity_system.h
-	fixed_size_pool.h
-	hierarchy.cpp
-	hierarchy.h
 	input_system.cpp
 	input_system.h
 	instance_pool.cpp
