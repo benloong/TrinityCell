@@ -23,9 +23,9 @@ namespace cell {
         EntitySystem(const Context &ctx);
         ~EntitySystem();
         entity_id_t createEntity();
-        void        destroyEntity(entity_id_t id);
+        void        destroyEntity(entity_id_t ent);
         
-        template<typename Comp_T>
+        template<typename _Ty>
         void addComponent(entity_id_t ent);
         
         

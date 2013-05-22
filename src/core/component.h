@@ -8,7 +8,7 @@
 
 #ifndef __TrinityCell__component__
 #define __TrinityCell__component__
-#include "entity.h"
+#include "types.h"
 
 //dynamic component system
 
@@ -20,16 +20,14 @@
 
 namespace DCS {
     
-    typedef int component_id_t;
-    
     struct Component {
         entity_id_t ent;
+        handle_t*   ref_handle;
     };
     
     template<typename _Type, unsigned int _MaxSize = 4096>
     struct Component_T : public Component
     {
-        typedef int handle_t;
         enum {
             MAX_COUNT = _MaxSize
         };
@@ -37,11 +35,16 @@ namespace DCS {
         void init(entity_id_t ent) { }
         void uninit() { }
         
-        static const component_id_t id;
+        void awake() { }
+        void onDestroy() { }
+        
+        void update() { }
+        
+        static const cmp_id_t id;
     };
 
     template<typename _Type, unsigned int _MaxSize>
-    const component_id_t Component_T<_Type, _MaxSize>::id = -1;
+    const cmp_id_t Component_T<_Type, _MaxSize>::id = 0;
 /*
     namespace EntityUtils
     {

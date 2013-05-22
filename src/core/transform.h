@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include "component.h"
 
-class Transform : public DCS::Component_T<Transform, 1<<16 > {
+class Transform : public DCS::Component_T<Transform, 1<<10 > {
     
 public:
     handle_t parent;
@@ -30,8 +30,7 @@ public:
     
     Transform();
     
-    void init();
-    void uninit();
+    ~Transform();
 };
     
 namespace Hierarchy

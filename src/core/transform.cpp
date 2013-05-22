@@ -15,13 +15,7 @@ Transform::Transform()
     
 }
 
-void Transform::init()
-{
-    
-
-}
-
-void Transform::uninit()
+Transform::~Transform()
 {
     
 }

@@ -9,62 +9,29 @@
 #ifndef __TrinityCell__instance_pool__
 #define __TrinityCell__instance_pool__
 
-#include <array>
-#include <vector>
-#include <assert.h>
-#include <functional>
+#include "types.h"
 
-typedef int handle_t;
-
-class PoolBase {
-public:
-    PoolBase(){}
+struct PoolBase {
     virtual ~PoolBase() {}
+    virtual void update() = 0;
+    virtual handle_t allocate() = 0;
+    virtual void free(handle_t) = 0;
 };
 
-template<typename _Ty, size_t _PoolSize, size_t _BitWidth = 16>
+template<typename _Ty, size_t _PoolSize>
 class InstancePool : public PoolBase
 {
 public:
-    static_assert(_BitWidth < 20, "Too large index bit width, must be smaller than 20.");
-    static_assert(_PoolSize <= 1 << _BitWidth, "_PoolSize out of index. _PoolSize must be smaller than 1<<_BitWidth.");
+    
+    static_assert(_PoolSize <= 1 << 16, "_PoolSize out of index. _PoolSize must be smaller than 1<<_BitWidth.");
     typedef _Ty DataType;
+
     
-    enum  {
-		ID_BIT_WIDTH    = _BitWidth,
-		KEY_BIT_WIDTH   = 32 - _BitWidth
-	};
+    index_t     keys[_PoolSize];
+    index_t     indices[_PoolSize];
+    DataType    data[_PoolSize];
     
-	struct Handle
-	{
-		int  idx : ID_BIT_WIDTH;
-		int  key : KEY_BIT_WIDTH;
-        
-        inline operator int()
-        {
-            return idx << ID_BIT_WIDTH | key;
-        }
-        
-        Handle(int h) : idx(h>>ID_BIT_WIDTH), key(h)
-        {
-            
-        }
-        Handle(int idx, int key) : idx(idx) , key(key)
-        {
-        }
-	};
-    
-	struct Entry
-	{
-		int  next_free : ID_BIT_WIDTH;
-		int  key       : KEY_BIT_WIDTH;
-	};
-    
-    std::array<Entry,   _PoolSize>  entries;
-    std::array<DataType,_PoolSize>  pool;
-	int                             first_free;
-    
-    std::vector<handle_t>           allocated;
+	index_t     next_idx;
     
 	InstancePool() {
         reset();
@@ -76,55 +43,57 @@ public:
     
     void reset()
     {
-        first_free = 0;
+        next_idx = 0;
         for(size_t i = 0; i < _PoolSize; ++i )
         {
-            entries[i].next_free = i+1;
-            entries[i].key       = 1;
+            indices[i] = i;
+            keys[i] = 1;
         }
-        allocated.clear();
     }
     
-    Handle allocate()
+    handle_t allocate()
     {
-        if (first_free >= _PoolSize || first_free >= 1<<ID_BIT_WIDTH) {
-            return Handle(0);
+        if (next_idx == _PoolSize || next_idx == 1<<16) {
+            return MAKE_HANDLE(0, 0);
         }
-        uint32_t idx = first_free;
-        first_free = entries[idx].next_free;
-        Handle h(idx, entries[idx].key);
-        allocated.push_back(h);
-        return h;
+        uint32_t idx = next_idx++;
+        return MAKE_HANDLE(idx, keys[idx]);
     }
     
-    void free(Handle handle)
+    void free(handle_t h)
     {
-        int idx = handle.idx;
-        assert(handle != 0 && "try to free an invalid handle.");
+        uint16_t idx = HANDLE_INDEX(h);
+        uint16_t last_idx = next_idx-1;
+        assert(h != 0 && "try to free an invalid handle.");
         assert(idx < _PoolSize);
-        entries[idx].next_free = first_free;
-        entries[idx].key += 1;
-        first_free = idx;
+        data[indices[idx]].~DataType();
+        keys[idx] += 1;
         
-        auto iter = std::find(allocated.begin(), allocated.end(), handle);
-        if( iter != allocated.end() )
-        {
-            std::swap(*iter, allocated.back());
-            allocated.pop_back();
-        }
+        DataType* last = &data[indices[last_idx]];
+        handle_t newhdl = MAKE_HANDLE(HANDLE_INDEX(h), HANDLE_KEY(*last->ref_handle));
+        *last->ref_handle = newhdl;
+        std::swap(indices[idx], indices[last_idx]);
+        std::swap(keys[idx], keys[last_idx]);
     }
     
-    DataType* resolve(Handle handle)
+    DataType* resolve(handle_t handle)
     {
         DataType* p = nullptr;
-        if(handle != 0 && handle.idx < _PoolSize && entries[handle.idx].key == handle.key)
-            p = &pool[handle.idx];
+        uint16_t idx = HANDLE_INDEX(handle);
+        uint16_t key = HANDLE_KEY(handle);
+        if(handle != INVALID_HANDLE && idx < _PoolSize && keys[idx] == key)
+            p = &data[indices[idx]];
         return p;
     }
     
-    inline DataType* data()
+    void update()
     {
-        return pool.data();
+        
+    }
+    
+    inline DataType* getData()
+    {
+        return data;
     }
 };
 

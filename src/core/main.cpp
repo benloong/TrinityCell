@@ -6,7 +6,6 @@
 #include "render_system.h"
 #include "component.h"
 #include <chrono>
-#include "entity.h"
 
 #include "timer.h"
 #include "component_manager.h"
@@ -43,6 +42,7 @@ int main()
         handle_t parent = Hierarchy::getParent(child);
         assert(Hierarchy::getRoot(child) == root);
         assert(parent == root);
+        ctx->getCompManager()->destroyComponent<Transform>(root);
         
     } while (0);
     ctx->shutdown();
