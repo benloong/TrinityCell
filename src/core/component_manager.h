@@ -13,6 +13,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <algorithm>
 #include "types.h"
 #include "instance_pool.h"
 #include "component_types.h"

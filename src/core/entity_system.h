@@ -11,10 +11,10 @@
 
 #include <vector>
 #include <string>
+#include "types.h"
 
 namespace cell {
     class Context;
-    typedef uint32_t entity_id_t;
     
     class EntitySystem
     {
