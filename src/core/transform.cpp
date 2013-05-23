@@ -10,17 +10,17 @@
 #include "context.h"
 #include "component_manager.h"
 
-Transform::Transform()
-{
-    
-}
+//Transform::Transform()
+//{
+//    
+//}
+//
+//Transform::~Transform()
+//{
+//    
+//}
 
-Transform::~Transform()
-{
-    
-}
-
-namespace Hierarchy {
+/*namespace Hierarchy {
     typedef InstancePool<Transform, Transform::MAX_COUNT> pool_type;
     
     enum {
@@ -85,3 +85,4 @@ namespace Hierarchy {
     }
     
 }
+*/

@@ -24,7 +24,6 @@ bool Context::init()
     _logger = new Logger("trinity_cell.log");
     _render_system = new RenderSystem(*this);
     _entity_system = new EntitySystem(*this);
-    _comp_manager = new ComponentManager();
     return true;
 }
 
@@ -32,12 +31,6 @@ void Context::shutdown()
 {
     delete _input_system;
     delete _logger;
-    delete _comp_manager;
     delete _entity_system;
     delete _render_system;
-}
-
-ComponentManager* Context::getCompManager()
-{
-    return _comp_manager;
 }

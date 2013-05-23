@@ -8,7 +8,7 @@
 
 #ifndef TrinityCell_component_types_h
 #define TrinityCell_component_types_h
-
+/*
 #include "camera.h"
 #include "transform.h"
 #include "light.h"
@@ -32,5 +32,6 @@ enum class E_ComponentType : unsigned short
 };
 
 #include "component_traits.h"
+ */
     
 #endif

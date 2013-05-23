@@ -9,10 +9,13 @@
 #ifndef __TrinityCell__renderable__
 #define __TrinityCell__renderable__
 
-#include "component.h"
+#include "cmp_base.h"
 
-class Renderable : public DCS::Component_T<Renderable, 4096> {
-    
+struct Renderable : public cmp_base {
+    enum {
+        ID = E_CType::CT_Renderable,
+        MAX_COUNT = 12
+    };
     bool  enabled;
     int   materialId;
     int   meshId;

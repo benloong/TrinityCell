@@ -32,7 +32,7 @@ public:
     void clear();
     void emit();
     
-private:
+    
     int particleCount;
     float time;
     std::vector<Particle> particles;

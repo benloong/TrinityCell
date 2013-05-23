@@ -10,10 +10,17 @@
 #include "timer.h"
 #include "component_manager.h"
 #include <thread>
-
+#include "transform.h"
 using namespace cell;
 using namespace std;
 
+struct _Int {
+    //entity_id_t ent_id;
+    handle_t*    hdl;
+    uint32_t     ent_id;
+    handle_t     _h;
+    handle_t     _h2;
+};
 int main()
 {
 
@@ -28,6 +35,10 @@ int main()
 //        std::cout << Timer::getTime()   << std::endl;
 //        std::cout << "==============================\n";
 //    }
+    cout << sizeof(entity_id_t) << endl;
+    cout << sizeof(float) << endl;
+    cout << sizeof(handle_t*) << endl;
+    cout << sizeof(_Int) << endl;
     getchar();
 
     if (ctx == nullptr) {
@@ -35,15 +46,14 @@ int main()
     }
     do {
         if(!ctx->init()) break;
-        
-        handle_t root = ctx->getCompManager()->addComponent<Transform>(10);
-        handle_t child = ctx->getCompManager()->addComponent<Transform>(12);
-        Hierarchy::setParent(child, root);
-        handle_t parent = Hierarchy::getParent(child);
-        assert(Hierarchy::getRoot(child) == root);
-        assert(parent == root);
-        ctx->getCompManager()->destroyComponent<Transform>(root);
-        
+        ComponentManager cmpMgr;
+        Transform* trans = cmpMgr.addComponent<Transform>(10);
+        handle_t h1 = *trans->ref_hdl;
+        Transform* trans2 = cmpMgr.addComponent<Transform>(12);
+        handle_t& h2 = *trans2->ref_hdl;
+        cmpMgr.freeComponent<Transform>(h1);
+        cmpMgr.freeComponent<Transform>(h2);
+        cmpMgr.updateComponent<Transform>();
     } while (0);
     ctx->shutdown();
     return 0;

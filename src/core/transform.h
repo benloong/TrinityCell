@@ -9,11 +9,15 @@
 #ifndef __TrinityCell__transform__
 #define __TrinityCell__transform__
 #include <stdint.h>
-#include "component.h"
+#include "cmp_base.h"
 
-class Transform : public DCS::Component_T<Transform, 1<<10 > {
+struct Transform : public cmp_base {
+
+    enum {
+        ID = 1,
+        MAX_COUNT = 1024
+    };
     
-public:
     handle_t parent;
     handle_t first_child;
     handle_t prev_sibling;
@@ -28,12 +32,14 @@ public:
     float  world_mat[16];
     float  local_mat[16];
     
-    Transform();
-    
-    ~Transform();
+    Transform()
+    {
+        int x = 0;
+        assert(x == 0);
+    }
 };
     
-namespace Hierarchy
+namespace Hierarchy_
 {
     void        setParent(handle_t child, handle_t parent);
     handle_t    getParent(handle_t trans);
@@ -43,4 +49,5 @@ namespace Hierarchy
     
     void        updateHierarchy();
 }
+
 #endif /* defined(__TrinityCell__transform__) */
