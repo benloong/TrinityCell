@@ -1,0 +1,3 @@
+INCLUDE_DIRECTORIES( ../gtest/include )
+INCLUDE_DIRECTORIES( ../src/core )
+FILE(GLOB TEST_SRC_FILES ${PROJECT_SOURCE_DIR}/test/*.cpp)

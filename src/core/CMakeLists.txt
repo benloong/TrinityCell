@@ -1,3 +1,39 @@
-SET(CELL_SRC main.cpp)
+SET(CELL_SRC 
+	audio_source.cpp
+	audio_source.h
+	camera.cpp
+	camera.h
+	cmp_base.cpp
+	cmp_base.h
+	cmp_type.h
+	component_manager.cpp
+	component_manager.h
+	context.cpp
+	context.h
+	entity_system.cpp
+	entity_system.h
+	hierarchy.cpp
+	hierarchy.h
+	input_system.cpp
+	input_system.h
+	light.cpp
+	light.h
+	logger.cpp
+	logger.h
+	main.cpp
+	particle_effect.cpp
+	particle_effect.h
+	render_system.cpp
+	render_system.h
+	renderable.cpp
+	renderable.h
+	scriptable.cpp
+	scriptable.h
+	timer.cpp
+	timer.h
+	transform.cpp
+	transform.h
+	types.h
+)
 
-ADD_EXECUTABLE(CellCore, CELL_SRC)
+ADD_EXECUTABLE(CellCore ${CELL_SRC})
