@@ -1,21 +1,21 @@
 SET(CELL_SRC 
- 	audio_source.cpp
+	audio_source.cpp
 	audio_source.h
 	camera.cpp
 	camera.h
-	component.cpp
-	component.h
+	cmp_base.cpp
+	cmp_base.h
+	cmp_type.h
 	component_manager.cpp
 	component_manager.h
-	component_types.h
 	context.cpp
 	context.h
 	entity_system.cpp
 	entity_system.h
+	hierarchy.cpp
+	hierarchy.h
 	input_system.cpp
 	input_system.h
-	instance_pool.cpp
-	instance_pool.h
 	light.cpp
 	light.h
 	logger.cpp
@@ -27,10 +27,13 @@ SET(CELL_SRC
 	render_system.h
 	renderable.cpp
 	renderable.h
+	scriptable.cpp
+	scriptable.h
 	timer.cpp
 	timer.h
-    transform.cpp
-    transform.h
+	transform.cpp
+	transform.h
+	types.h
 )
 
 ADD_EXECUTABLE(CellCore ${CELL_SRC})

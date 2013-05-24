@@ -16,8 +16,6 @@
 #include <algorithm>
 #include "types.h"
 #include "cmp_type.h"
-#include "cmp_base.h"
-#include "hierarchy.h"
 
 struct EntityInfo {
     entity_id_t id;
@@ -28,9 +26,6 @@ struct EntityInfo {
         memset(name, 0, 32);
     }
 };
-
-struct Transform;
-
 
 struct ComponentManager{
     
@@ -104,13 +99,8 @@ struct ComponentManager{
     }
 };
 
-template<typename >
-cmp_type_t<Transform>* regiseterCmpType<Transform>()
-{
-    cmp_type_t<Transform>* p = new Hierarchy::;
-    cmp_types[Transform::ID].reset(p);
-    return p;
-}
+
+struct Transform;
 template<>
 void ComponentManager::updateComponent<Transform>();
 #endif /* defined(__TrinityCell__component_manager__) */

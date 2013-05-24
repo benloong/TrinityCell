@@ -9,9 +9,9 @@
 #ifndef __TrinityCell__scriptable__
 #define __TrinityCell__scriptable__
 
-#include "component.h"
+#include "cmp_base.h"
 
-class Scriptable : public DCS::Component_T<Scriptable, 4096>
+class Scriptable : public cmp_base
 {
     int scriptID;
     

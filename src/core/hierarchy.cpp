@@ -7,3 +7,10 @@
 //
 
 #include "hierarchy.h"
+
+
+template<>
+void cmp_type_t<Transform>::on_update()
+{
+    
+}

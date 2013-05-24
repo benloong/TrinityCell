@@ -11,10 +11,5 @@
 
 #include "cmp_type.h"
 #include "transform.h"
-struct Hierarchy : public cmp_type_t<Transform> {
-    virtual void update()
-    {
-        
-    }
-};
+
 #endif /* defined(__TrinityCell__hierarchy__) */

@@ -10,11 +10,11 @@
 #define __TrinityCell__particle_effect__
 
 
-#include "component.h"
+#include "cmp_base.h"
 #include <vector>
 
-class ParticleEffect : public DCS::Component_T<ParticleEffect, 1024>{
-    
+class ParticleEffect : public cmp_base
+{
 public:
     struct Particle {
         float position[3];

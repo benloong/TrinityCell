@@ -9,9 +9,9 @@
 #ifndef __TrinityCell__audio_source__
 #define __TrinityCell__audio_source__
 
-#include "component.h"
+#include "cmp_base.h"
 
-class AudioSource : public DCS::Component_T<AudioSource, 1024> {
+class AudioSource : public cmp_base {
     float volume;
     float time;
     bool  loop;

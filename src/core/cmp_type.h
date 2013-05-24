@@ -159,4 +159,7 @@ struct cmp_type_t : public cmp_type_base
     }
 };
 
+struct Transform;
+template<>
+void cmp_type_t<Transform>::on_update();
 #endif

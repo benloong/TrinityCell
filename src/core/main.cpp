@@ -4,7 +4,6 @@
 #include "context.h"
 #include "logger.h"
 #include "render_system.h"
-#include "component.h"
 #include <chrono>
 
 #include "timer.h"

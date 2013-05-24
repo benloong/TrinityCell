@@ -9,9 +9,9 @@
 #ifndef __TrinityCell__light__
 #define __TrinityCell__light__
 
-#include "component.h"
+#include "cmp_base.h"
 
-class Light : public DCS::Component_T<Light, 4096>
+class Light : public cmp_base
 {
 public:
     enum Type{
