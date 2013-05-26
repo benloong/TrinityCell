@@ -18,7 +18,6 @@ typedef uint16_t type_id_t;
 typedef uint16_t cmp_id_t;
 typedef uint32_t entity_id_t;
 typedef uint32_t handle_t;
-typedef uint16_t index_t;
 
 static const entity_id_t INVALID_ENTITY_ID = 0;
 static const handle_t INVALID_HANDLE = 0;

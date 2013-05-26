@@ -39,16 +39,19 @@ struct Transform : public cmp_base {
         assert(x == 0);
     }
 };
+namespace SceneGraph {
     
-namespace Hierarchy_
-{
-    void        setParent(handle_t child, handle_t parent);
-    handle_t    getParent(handle_t trans);
-    handle_t    getRoot(handle_t trans);
-    int         childCount(handle_t trans);
-    handle_t    getChild(int index);
+void        setParent(Transform* self, Transform* parent);
+
+Transform*  getParent(Transform* self);
+
+Transform*  getRoot(Transform* self);
+
+int         childCount(Transform* self);
+
+Transform*  getChild(Transform* self, int index);
     
-    void        updateHierarchy();
+void        update();
 }
 
 #endif /* defined(__TrinityCell__transform__) */

@@ -33,9 +33,9 @@ struct cmp_type_t : public cmp_type_base
     const size_t max_size;
 	const size_t max_bytes;
     
-	uint8_t*   data;
-	size_t * indices;
-	size_t * keys;
+	uint8_t*    data;
+	size_t*     indices;
+	size_t*     keys;
     
 	size_t  next_idx;
     
@@ -92,6 +92,7 @@ struct cmp_type_t : public cmp_type_base
 		p = at(indices[cur_idx]);
         p = new (p) comp_type();
         p->handle = MAKE_HANDLE(cur_idx, keys[cur_idx]);
+        p->type = this;
 		return p;
 	}
     
@@ -142,5 +143,5 @@ struct Transform;
 template<>
 void cmp_type_t<Transform>::update();
 template<>
-void cmp_type_t<Transform>::free(cmp_base *cmp);
+void cmp_type_t<Transform>::free(cmp_base* cmp);
 #endif
