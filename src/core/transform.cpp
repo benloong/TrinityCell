@@ -70,12 +70,14 @@ namespace SceneGraph {
             self->parent = INVALID_HANDLE;
             self->next_sibling = INVALID_HANDLE;
             self->prev_sibling = INVALID_HANDLE;
+            self->level = 0;
             return;
         }
         
         Transform* next_sibling = (Transform*) parent->type->resolve(parent->first_child);
         self->parent = parent->handle;
         self->next_sibling = parent->first_child;
+        self->level = parent->level+1;
         parent->first_child = self->handle;
         
         if (next_sibling != nullptr)
