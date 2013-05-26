@@ -20,7 +20,7 @@ namespace cell {
     {
         
     public:
-        EntitySystem(const Context &ctx);
+        EntitySystem(const Context& ctx);
         ~EntitySystem();
         entity_id_t createEntity();
         void        destroyEntity(entity_id_t ent);

@@ -12,8 +12,6 @@ SET(CELL_SRC
 	context.h
 	entity_system.cpp
 	entity_system.h
-	hierarchy.cpp
-	hierarchy.h
 	input_system.cpp
 	input_system.h
 	light.cpp

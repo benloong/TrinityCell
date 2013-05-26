@@ -24,14 +24,27 @@ int main()
     do {
         if(!ctx->init()) break;
         
-        EntityInfo* ent_info = createEntity("entity 0");
+        EntityInfo* ent0 = createEntity("entity 0");
+        Transform* trans = addComponent<Transform>(ent0);
         
-        Transform* trans = addComponent<Transform>(ent_info);
-        destroyEntity(ent_info);
+        EntityInfo* ent1 = createEntity("entity 1");
+        Transform* trans2 = addComponent<Transform>(ent1);
         
-        ent_info = createEntity("entity 1");
-        Transform* trans2 = addComponent<Transform>(ent_info);
-        cout << trans->ent_id << endl;
+        assert(ent1->id = trans2->ent_id);
+        
+        SceneGraph::setParent(trans2, trans);
+        Transform* parent = SceneGraph::getParent(trans2);
+        assert(parent == trans);
+        
+        EntityInfo* ent2 = createEntity("Entity2");
+        Transform* trans3 = addComponent<Transform>(ent2);
+        SceneGraph::setParent(trans3, trans);
+        
+        assert(SceneGraph::getParent(trans3) == trans);
+        
+       // SceneGraph::setParent(trans3, nullptr);
+        
+        assert(SceneGraph::getRoot(trans3) == trans);
         //cmpMgr.freeComponent(trans2);
         //assert(trans == cmpMgr.getComponent<Transform>(10));
     } while (0);

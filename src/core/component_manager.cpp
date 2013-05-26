@@ -8,14 +8,15 @@
 
 #include "component_manager.h"
 
+//gloable variable
 ComponentManager cmp_mgr;
 
-ComponentManager::ComponentManager() : next_id(0)
+ComponentManager::ComponentManager() : next_id(1)
 {
     
 }
 
-EntityInfo* createEntity(char const * name)
+EntityInfo* createEntity(const char* name)
 {
     entity_id_t id = cmp_mgr.next_id++;
     EntityInfo * ent_info = &cmp_mgr.entities[id];
@@ -25,7 +26,7 @@ EntityInfo* createEntity(char const * name)
     return ent_info;
 }
 
-void destroyEntity(EntityInfo * ent_info)
+void destroyEntity(EntityInfo* ent_info)
 {
     for (auto it = ent_info->components.begin(); it != ent_info->components.end(); it++) {
         cmp_type_base* cmp_type = cmp_mgr.cmp_types[it->first].get();
@@ -39,7 +40,7 @@ EntityInfo* getEntityByID(entity_id_t id)
     return &cmp_mgr.entities[id];
 }
 
-void destroyComponent(cmp_base * cmp)
+void destroyComponent(cmp_base* cmp)
 {
     //freeComponent(getCmpType<_Ty>(), cmp);
 }

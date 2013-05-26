@@ -26,7 +26,7 @@ struct EntityInfo {
     entity_id_t id;
     char        name[32];
     uint32_t    flags;
-    ComponentManager * mgr;
+    ComponentManager* mgr;
     std::map<cmp_id_t, handle_t* > components;
     EntityInfo() : id(0), mgr(0)
     {
@@ -34,15 +34,15 @@ struct EntityInfo {
     }
 };
 
-EntityInfo* createEntity(char const * name);
-void        destroyEntity(EntityInfo * ent_info);
+EntityInfo* createEntity(const char* name);
+void        destroyEntity(EntityInfo* ent_info);
 EntityInfo* getEntityByID(entity_id_t id);
 
 template <typename _Ty>
-_Ty* getComponent(EntityInfo * ent_info);
+_Ty* getComponent(EntityInfo* ent_info);
 
 template <typename _Ty>
-_Ty* addComponent(EntityInfo * ent_info);
+_Ty* addComponent(EntityInfo* ent_info);
 
 
 struct ComponentManager{
@@ -56,26 +56,26 @@ struct ComponentManager{
 
 //////////
 template <typename _Ty>
-_Ty* getComponent(EntityInfo * ent_info) {
+_Ty* getComponent(EntityInfo* ent_info) {
     handle_t h = ent_info->components[_Ty::ID];
-    cmp_type_base *cmp_tp = ent_info->mgr->cmp_types[_Ty::ID].get();
+    cmp_type_base* cmp_tp = ent_info->mgr->cmp_types[_Ty::ID].get();
     if (cmp_tp == nullptr) {
         cmp_tp = new cmp_type_t<_Ty>();
         ent_info->mgr->cmp_types[_Ty::ID].reset(cmp_tp);
     }
-    _Ty* cmp = static_cast<_Ty*>(cmp_tp->resolve(h));
+    _Ty* cmp = static_cast<_Ty* >(cmp_tp->resolve(h));
     return cmp;
 }
 
 template <typename _Ty>
-_Ty* addComponent(EntityInfo * ent_info) {
-    cmp_type_base *cmp_tp = ent_info->mgr->cmp_types[_Ty::ID].get();
+_Ty* addComponent(EntityInfo* ent_info) {
+    cmp_type_base* cmp_tp = ent_info->mgr->cmp_types[_Ty::ID].get();
     if (cmp_tp == nullptr) {
         cmp_tp = new cmp_type_t<_Ty>();
         ent_info->mgr->cmp_types[_Ty::ID].reset(cmp_tp);
     }
     
-    _Ty* cmp = static_cast<_Ty*>(cmp_tp->allocate());
+    _Ty* cmp = static_cast<_Ty* >(cmp_tp->allocate());
     if (cmp) {
         ent_info->components[_Ty::ID] = &cmp->handle;
         cmp->ent_id = ent_info->id;
@@ -84,8 +84,8 @@ _Ty* addComponent(EntityInfo * ent_info) {
 }
 
 template <typename _Ty>
-void destroyComponent(EntityInfo * ent_info, _Ty* cmp) {
-    cmp_type_base * p = ent_info->mgr->cmp_types[_Ty::ID].get();
+void destroyComponent(EntityInfo* ent_info, _Ty* cmp) {
+    cmp_type_base* p = ent_info->mgr->cmp_types[_Ty::ID].get();
     assert(p != nullptr && "try to destroy un registered component type.");
     p->free(cmp);
 }
