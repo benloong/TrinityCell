@@ -8,81 +8,36 @@
 
 #include "transform.h"
 #include "context.h"
-#include "component_manager.h"
+#include "cmp_type.h"
 
-//Transform::Transform()
-//{
-//    
-//}
-//
-//Transform::~Transform()
-//{
-//    
-//}
 
-/*namespace Hierarchy {
-    typedef InstancePool<Transform, Transform::MAX_COUNT> pool_type;
-    
-    enum {
-        Dirty_Child = 0x1,
-        Dirty_All   = 0x2
-    };
-    
-    void setParent(handle_t trans, handle_t parent)
-    {
-        auto compMgr = cell::ctx->getCompManager();
-        Transform * child = compMgr->resolveHandle<Transform>(trans);
-        Transform * newParent = compMgr->resolveHandle<Transform>(parent);
-        assert(child != nullptr && "null child transform.");
-        Transform * oldParent = compMgr->resolveHandle<Transform>(child->parent);
-        
-        handle_t newNext = 0;
-        if (newParent != nullptr) {
-            newNext = newParent->first_child;
-            auto next = compMgr->resolveHandle<Transform>(newParent->first_child);
-            if(next != nullptr) {
-                next->prev_sibling = trans;
-            }
-            newParent->first_child = trans;
-        }
-        
-        if (oldParent!= nullptr && oldParent->first_child == trans) {
-            oldParent->first_child = child->next_sibling;
-        }
-        if (child->prev_sibling) {
-            compMgr->resolveHandle<Transform>(child->prev_sibling)->next_sibling = child->next_sibling;
-        }
-        
-        child->parent = parent;
-        child->next_sibling = newNext;
-        child->prev_sibling = 0;
-        child->bitmask |= Dirty_All;
-    }
-    
-    handle_t getParent(handle_t trans)
-    {
-        auto p = cell::ctx->getCompManager()->resolveHandle<Transform>(trans);
-        if(p != nullptr) return p->parent;
-        return 0;
-    }
-    
-    handle_t getRoot(handle_t trans)
-    {
-        handle_t root = trans;
-        
-        while (root != 0) {
-            trans = getParent(trans);
-            if (!trans)
-                break;
-            root = trans;
-        }
-        return root;
-    }
-    
-    void updateHierarchy()
-    {
-        
-    }
+template<>
+void cmp_type_t<Transform>::update()
+{
     
 }
-*/
+
+template <>
+void cmp_type_t<Transform>::free(cmp_base * cmp)
+{
+    handle_t h = cmp->handle;
+    assert(h != INVALID_HANDLE && "try to free an invalid handle.");
+    size_t idx = HANDLE_INDEX(h);
+    size_t key = HANDLE_KEY(h);
+    assert(idx < max_size && "bad handle index.");
+    assert(key == keys[idx] && "bad handle key.");
+    keys[idx] += 1;
+    
+    //swap back and idx
+    size_t last_idx = --next_idx;
+    if(last_idx == idx) return;
+    
+    cmp_base* last_cmp = at(indices[last_idx]);
+    
+    std::swap(indices[idx], indices[last_idx]);
+    std::swap(keys[idx], keys[last_idx]);
+    
+    handle_t old_handle =  last_cmp->handle;
+    last_cmp->handle = MAKE_HANDLE(idx, HANDLE_KEY(old_handle));
+    ((pointer_type)cmp)->~comp_type();
+}

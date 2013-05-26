@@ -10,6 +10,7 @@
 #define __TrinityCell__transform__
 #include <stdint.h>
 #include "cmp_base.h"
+#include <vector>
 
 struct Transform : public cmp_base {
 
