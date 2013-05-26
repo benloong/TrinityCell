@@ -32,13 +32,9 @@ struct Transform : public cmp_base {
     
     float  world_mat[16];
     float  local_mat[16];
-    
-    Transform()
-    {
-        int x = 0;
-        assert(x == 0);
-    }
+
 };
+
 namespace SceneGraph {
     
 void        setParent(Transform* self, Transform* parent);

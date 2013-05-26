@@ -35,18 +35,16 @@ int main()
         SceneGraph::setParent(trans2, trans);
         Transform* parent = SceneGraph::getParent(trans2);
         assert(parent == trans);
-        
+        assert(trans2->level == 1);
         EntityInfo* ent2 = createEntity("Entity2");
         Transform* trans3 = addComponent<Transform>(ent2);
-        SceneGraph::setParent(trans3, trans);
+        SceneGraph::setParent(trans3, trans2);
         
-        assert(SceneGraph::getParent(trans3) == trans);
-        
-       // SceneGraph::setParent(trans3, nullptr);
+        assert(SceneGraph::getParent(trans3) == trans2);
+        assert(trans3->level == 2);
+        // SceneGraph::setParent(trans3, nullptr);
         
         assert(SceneGraph::getRoot(trans3) == trans);
-        //cmpMgr.freeComponent(trans2);
-        //assert(trans == cmpMgr.getComponent<Transform>(10));
     } while (0);
     ctx->shutdown();
     return 0;
