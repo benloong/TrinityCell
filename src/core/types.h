@@ -10,6 +10,7 @@
 #define TrinityCell_types_h
 
 #include <cstdint>
+#include <cstddef>
 #include <limits>
 #include <assert.h>
 

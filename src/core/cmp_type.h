@@ -12,24 +12,38 @@
 #include "types.h"
 #include "cmp_base.h"
 
-//fixed size component instance pool
 struct cmp_type_base
 {
+    virtual cmp_base* allocate() = 0;
+	
+    virtual void free(cmp_base *p) = 0;
+    
+    virtual void update() = 0;
+    
+    virtual cmp_base* resolve(handle_t h) = 0;
+};
+
+//fixed size component instance pool
+template <typename _Ty>
+struct cmp_type_t : public cmp_type_base
+{
+    typedef _Ty     comp_type;
+    typedef _Ty*    pointer_type;
 	const size_t stride;
     const size_t max_size;
 	const size_t max_bytes;
     
-	uint8_t *data;
-	size_t  *indices;
-	size_t  *keys;
+	uint8_t*   data;
+	size_t * indices;
+	size_t * keys;
     
 	size_t  next_idx;
     
-	cmp_type_base(size_t stride, size_t _max_size)
+	cmp_type_t()
 	:
-	stride(stride),
-	max_size(_max_size),
-	max_bytes(stride*_max_size),
+	stride(sizeof(_Ty)),
+	max_size(_Ty::MAX_COUNT),
+	max_bytes(stride*max_size),
 	data(0),
 	indices(0),
     keys(0),
@@ -38,7 +52,7 @@ struct cmp_type_base
 		reset();
 	}
     
-	~cmp_type_base()
+	~cmp_type_t()
 	{
 		delete []data;
 		delete []indices;
@@ -63,49 +77,52 @@ struct cmp_type_base
 		next_idx = 0;
 	}
     
-	inline void* at(size_t idx)
+	inline cmp_base* at(size_t idx)
 	{
-		return data + idx;
+		return (cmp_base*)(data + idx);
 	}
     
-	handle_t allocate()
+	virtual cmp_base* allocate()
 	{
 		if (next_idx == max_size || next_idx == 1 << 16)
-			return INVALID_HANDLE;
+			return nullptr;
         
-		void *p = 0;
+		cmp_base* p = nullptr;
         size_t cur_idx = next_idx++;
 		p = at(indices[cur_idx]);
-		on_allocated(p);
-		return MAKE_HANDLE(cur_idx, keys[cur_idx]);
+        p = new (p) comp_type();
+        p->handle = MAKE_HANDLE(cur_idx, keys[cur_idx]);
+		return p;
 	}
     
-	void free(handle_t h)
+	virtual void free(cmp_base* cmp)
 	{
+        handle_t h = cmp->handle;
 		assert(h != INVALID_HANDLE && "try to free an invalid handle.");
 		size_t idx = HANDLE_INDEX(h);
 		size_t key = HANDLE_KEY(h);
 		assert(idx < max_size && "bad handle index.");
         assert(key == keys[idx] && "bad handle key.");
-		void* p = at(indices[idx]);
-		on_free(p);
-        
+        keys[idx]++;
 		//swap back and idx
 		size_t last_idx = --next_idx;
         if(last_idx == idx) return;
         
-        cmp_base* cmp = static_cast<cmp_base*>(at(indices[last_idx]));
+        cmp_base* last_cmp = at(indices[last_idx]);
         
 		std::swap(indices[idx], indices[last_idx]);
 		std::swap(keys[idx], keys[last_idx]);
-        keys[last_idx] += 1;
         
-        handle_t old_handle =  *cmp->ref_hdl;
-        *cmp->ref_hdl = MAKE_HANDLE(idx, HANDLE_KEY(old_handle));
+        handle_t old_handle =  last_cmp->handle;
+        last_cmp->handle = MAKE_HANDLE(idx, HANDLE_KEY(old_handle));
+        ((pointer_type)cmp)->~comp_type();
 	}
     
-    void* resolve(handle_t h)
+    cmp_base* resolve(handle_t h)
     {
+        if(h == INVALID_HANDLE)
+            return nullptr;
+        
         assert(h != INVALID_HANDLE && "try to free an invalid handle.");
 		size_t idx = HANDLE_INDEX(h);
 		size_t key = HANDLE_KEY(h);
@@ -114,52 +131,16 @@ struct cmp_type_base
         return at(indices[idx]);
     }
     
-	virtual void on_allocated(void *p)
-	{
-		
-	}
-    
-	virtual void on_free(void *p)
-	{
-        
-	}
-    
-    virtual void on_update()
+    virtual void update()
     {
         
     }
 };
 
-template <typename _Ty>
-struct cmp_type_t : public cmp_type_base
-{
-    typedef _Ty     comp_type;
-    typedef _Ty*    pointer_type;
-	cmp_type_t()
-	:
-	cmp_type_base(sizeof(_Ty), _Ty::MAX_COUNT)
-	{
-	}
-    
-	void on_allocated(void *p)
-	{
-        new (p)comp_type();
-	}
-    
-	void on_free(void *p)
-	{
-        pointer_type cmp = static_cast<pointer_type>(p);
-        *cmp->ref_hdl = INVALID_HANDLE;
-        cmp->~comp_type();
-	}
-    
-    void on_update()
-    {
-        
-    }
-};
-
+//specilize update and free for Transform hierarchy
 struct Transform;
 template<>
-void cmp_type_t<Transform>::on_update();
+void cmp_type_t<Transform>::update();
+template<>
+void cmp_type_t<Transform>::free(cmp_base *cmp);
 #endif

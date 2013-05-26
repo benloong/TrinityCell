@@ -22,8 +22,8 @@ enum E_CType
 };
 
 struct cmp_base {
-    entity_id_t  ent_id;
-    handle_t*    ref_hdl;
+    entity_id_t  ent_id;//host entity id
+    handle_t     handle;//self handle
 };
 
 #endif /* defined(__TrinityCell__cmp_base__) */
