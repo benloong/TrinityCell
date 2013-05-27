@@ -9,12 +9,21 @@
 #include "transform.h"
 #include "context.h"
 #include "cmp_type.h"
-
+#include "math.h"
 
 template<>
 void cmp_type_t<Transform>::update()
 {
-    
+    Transform* trans = nullptr;
+    Transform* parent = nullptr;
+    for (int i = 0; i < next_idx; ++i) {
+        trans = (Transform*)data[indices[i]];
+        trans->world_mat = trans->local_mat;
+        if (trans->parent != INVALID_HANDLE) {
+            parent = (Transform*)data[indices[HANDLE_INDEX(trans->parent)]];
+            trans->world_mat = Math::mul(trans->local_mat, parent->world_mat);
+        }
+    }
 }
 
 template <>

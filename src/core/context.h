@@ -24,7 +24,7 @@ namespace cell {
     {
         Logger          * _logger;
         EntitySystem    * _entity_system;
-        InputSystem     *  _input_system;
+        InputSystem     * _input_system;
         RenderSystem    * _render_system;
     public:
         bool init();

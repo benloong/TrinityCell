@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include "cmp_base.h"
 #include <vector>
+#include "math.h"
 
 struct Transform : public cmp_base {
 
@@ -26,13 +27,14 @@ struct Transform : public cmp_base {
     uint16_t level;
     uint16_t bitmask; // update bit mask
     
-    float  position[3];
-    float  scale[3];
-    float  rotation[4];
+    Vector3f  position;
+    Vector3f  scale;
+    Vector4f  rotation;
     
-    float  world_mat[16];
-    float  local_mat[16];
-
+    Matrix4f  world_mat;
+    Matrix4f  local_mat;
+    
+    Transform() {}
 };
 
 namespace SceneGraph {

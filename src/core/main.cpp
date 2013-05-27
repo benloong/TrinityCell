@@ -10,6 +10,7 @@
 #include "component_manager.h"
 #include <thread>
 #include "transform.h"
+#include "lock_free_queue.h"
 using namespace cell;
 using namespace std;
 

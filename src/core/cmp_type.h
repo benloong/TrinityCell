@@ -90,7 +90,7 @@ struct cmp_type_t : public cmp_type_base
 		cmp_base* p = nullptr;
         size_t cur_idx = next_idx++;
 		p = at(indices[cur_idx]);
-        p = new (p) comp_type();
+        p = new (p) comp_type;
         p->handle = MAKE_HANDLE(cur_idx, keys[cur_idx]);
         p->type = this;
 		return p;

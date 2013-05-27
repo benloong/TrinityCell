@@ -18,6 +18,6 @@ class AudioSource : public cmp_base {
     int   clipID; //audio clip id
     
 public:
-    void Play();
+    void play();
 };
 #endif /* defined(__TrinityCell__audio_source__) */
